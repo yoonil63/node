@@ -1,0 +1,42 @@
+START THE POSTGRESQL SERVICE
+sudo service postgresql start
+CONNECT TO THE SERVICE
+sudo sudo -u postgres psql
+
+CREATE A POSTGRESQL DATABASE
+postgres=# CREATE DATABASE "groceries";
+LIST ALL DATABASES
+postgres=# \list
+
+create user <username> with password '<password>';
+alter user <username> superuser;
+display users
+\du
+
+display tables
+\dt
+
+list dbs
+\list 
+
+connect to db
+\connect database_name
+
+display current db
+\conninfo or  SELECT current_database();
+
+disconnect
+\q
+
+help
+\?
+cmd + v : for exit
+
+discribe table info
+\d+ tableName
+
+http://postgresguide.com/utilities/psql.htmlhttp://postgresguide.com/utilities/psql.html
+
+
+
+SELECT * FROM session;

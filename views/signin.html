@@ -1,0 +1,21 @@
+<% var title = 'Sign in Page' %>
+<% include head %>
+<form method="post" action="/signin">
+ <p>
+    <label>Email:</label>
+    <input type="text" name="email">
+  </p>
+  <p>
+    <label>Password:</label>
+    <input type="text" name="password">
+  </p>
+  <p>
+    <label>Confirm Password:</label>
+    <input type="text" name="confirmpassword">
+  </p>
+  <p>
+    <input type="submit" value="Submit">
+  </p>
+</form>
+<% include foot %>
+

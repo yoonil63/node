@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var port = '8080';
+app.listen(port); 
+/**
+var http = require('http');
+
+
+ * Get port from environment and store in Express.
+
+var port = '8080'
+app.set('port',port);
+ */
+/**
+ * Create HTTP server.
+
+
+var server = http.createServer(app); // app
+
+/**
+ * Listen on provided port, on all network interfaces.
+
+
+server.listen(port); */
+//server.on('listening', onListening);
