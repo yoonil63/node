@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var pg = require('pg');
+var path = require('path');
 var hash = require('./pass').hash;
+var passport = require('passport');
 var session = require('express-session'),
 pgSession = require('connect-pg-simple')(session);
 /*
@@ -11,11 +13,14 @@ router.use(session({
   secret: 'shhhh, very secret'
 }));
 */
+console.log('aaa');
+var connectionString = require(path.join(__dirname, '../', 'config'));
+console.log('bbb');
 
 router.use(session({
     store: new pgSession({
     pg : pg,                                  // Use global pg-module 
-    conString : 'postgres://admin:admin@localhost:5432/lopreter', // Connect db lopreter as user admin
+    conString : connectionString, // Connect db lopreter as user admin
     tableName : 'session'               // Use another table-name than the default "session" one 
   }),
   //secret: process.env.FOO_COOKIE_SECRET,
@@ -38,15 +43,21 @@ router.use(function(req, res, next){
   next();
 });
 
+
 var users = {
   tj: { name: 'tj' }
 };
 
+console.log('userssss ' + users.tj.name);
 // when you create a user, generate a salt
 // and hash the password ('foobar' is the pass here)
 
-hash('foobar', function(err, salt, hash){
-  if (err) throw err;
+hash('foobar', function(err, salt, hash)
+{
+  if (err)
+  {
+    throw err;
+  }
   // store the salt & hash in the "db"
   users.tj.salt = salt;
   users.tj.hash = hash;
@@ -56,7 +67,10 @@ hash('foobar', function(err, salt, hash){
 // Authenticate using our plain-object database of doom!
 
 function authenticate(name, pass, fn) {
-  if (!module.parent) console.log('authenticating %s:%s', name, pass);
+  if (!module.parent) 
+  {
+    console.log('authenticating %s:%s', name, pass);
+  }
   var user = users[name];
   // query the db for the given username
   // if the user is not exist
@@ -68,17 +82,27 @@ function authenticate(name, pass, fn) {
   // apply the same algorithm to the POSTed password, applying
   // the hash against the pass / salt, if there is a match we
   // found the user
-  hash(pass, user.salt, function(err, hash){
-    if (err) return fn(err);
-    if (hash == user.hash) return fn(null, user);
+  hash(pass, user.salt, function(err, hash)
+  {
+    if (err)
+    {
+      return fn(err);
+    }
+    if (hash == user.hash) 
+    {
+      return fn(null, user);
+    }
     fn(new Error('invalid password'));
   });
 }
 
 function restrict(req, res, next) {
-  if (req.session.user) {
+  if (req.session.user) 
+  {
     next();
-  } else {
+  } 
+  else 
+  {
     req.session.error = 'Access denied!';
     res.redirect('/login');
   }
@@ -102,10 +126,24 @@ router.get('/logout', function(req, res){
   });
 });
 
-
+//// SQL Query > Select Data
+//        var query = client.query("SELECT * FROM Users where username = " + req.body.username +);
 router.post('/', function(req, res){
   authenticate(req.body.username, req.body.password, function(err, user){
+    
+   /* pg.connect(connectionString, function(err, client, done) {
+        // Handle connection errors
+        if(err) 
+        {
+          done();
+          console.log(err);
+          return res.status(500).json({ success: false, data: err});
+        }    
+        var query = client.query("SELECT * FROM Users where username = " + req.body.username );
+    });
+    */
     if (user) {
+       
       // Regenerate session when signing in
       // to prevent fixation
       req.session.regenerate(function(){
